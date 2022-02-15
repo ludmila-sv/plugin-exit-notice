@@ -4,13 +4,13 @@
  *
  * @package       EXITNOTICE
  * @author        Ludmila Sviridova
- * @version       1.0.0
+ * @version       1.1.0
  *
  * @wordpress-plugin
  * Plugin Name:   Exit Notice
  * Plugin URI:    https://pressfoundry.com
  * Description:   Shows a custom exit notice when a user clicks an external link.
- * Version:       1.0.0
+ * Version:       1.1.0
  * Author:        Ludmila Sviridova
  * Text Domain:   exit-notice
  */
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'EXITNOTICE_NAME', 'Exit Notice' );
 
 // Plugin version
-define( 'EXITNOTICE_VERSION', '1.0.0' );
+define( 'EXITNOTICE_VERSION', '1.1.0' );
 
 // Plugin Root File
 define( 'EXITNOTICE_PLUGIN_FILE', __FILE__ );
