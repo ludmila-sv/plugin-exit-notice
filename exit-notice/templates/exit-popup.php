@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $options = Exit_Notice::$options_schema;
 $fields  = $options[0]['fields'];
 
-$enable      = ( null !== get_option( 'enableExitNotice' ) ) ? get_option( 'enableExitNotice' ) : $fields[0]['default'];
+$enable      = get_option( 'enableExitNotice' ) ? get_option( 'enableExitNotice' ) : $fields[0]['default'];
 $title       = get_option( 'exitNoticeTitle' ) ? get_option( 'exitNoticeTitle' ) : $fields[1]['default'];
 $text        = get_option( 'exitNoticeText' ) ? get_option( 'exitNoticeText' ) : $fields[2]['default'];
 $btn_cancel  = get_option( 'btnCancel' ) ? get_option( 'btnCancel' ) : $fields[3]['default'];

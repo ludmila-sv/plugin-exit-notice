@@ -87,6 +87,9 @@ class Exit_Notice {
 	}
 
 	public static function init_assets() {
+		$options = self::$options_schema;
+		$fields  = $options[0]['fields'];
+		$enable  = get_option( 'enableExitNotice' ) ? get_option( 'enableExitNotice' ) : $fields[0]['default'];
 
 		function exit_notice_plugin_styles() {
 			wp_register_style( 'exit-notice-style', EXITNOTICE_PLUGIN_URL . 'assets/css/styles.css', array(), EXITNOTICE_VERSION );
@@ -98,9 +101,10 @@ class Exit_Notice {
 			$whitelist = get_option( 'exitNoticeWhitelist' ) ? explode( ',', get_option( 'exitNoticeWhitelist' ) ) : array();
 			wp_localize_script( 'exit-notice-scripts', 'EXITNOTICE_WHITELIST', $whitelist );
 		}
-		//add_action( 'admin_enqueue_scripts', 'exit_notice_plugin_styles' );
-		add_action( 'wp_enqueue_scripts', 'exit_notice_plugin_styles' );
 
+		if ( $enable ) {
+			add_action( 'wp_enqueue_scripts', 'exit_notice_plugin_styles' );
+		}
 	}
 
 	public static function admin_page() {
@@ -161,7 +165,7 @@ class Exit_Notice {
 				}
 				break;
 			case 'checkbox':
-				$value   = ( null !== get_option( $option_name ) ) ? get_option( $option_name ) : $field['default'];
+				$value   = get_option( $option_name ) ? get_option( $option_name ) : $field['default'];
 				$checked = ( $value ) ? ' checked' : '';
 				echo '<input name="' . $option_name . '" type="checkbox" value="1"' . $checked . ' />';
 				break;
@@ -215,6 +219,7 @@ class Exit_Notice {
 	 */
 	public static function deactivate() {
 		remove_menu_page( self::$options_page_name );
+		delete_option( self::$options_group_name );
 		flush_rewrite_rules();
 	}
 
