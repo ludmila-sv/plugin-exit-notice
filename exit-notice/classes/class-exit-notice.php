@@ -361,6 +361,17 @@ class Exit_Notice {
 		require_once EXITNOTICE_PLUGIN_DIR . 'templates/custom-styles.php';
 	}
 
+	public static function delete_plugin_options() {
+		$options_sections = self::$options_schema;
+		foreach ( $options_sections as $section ) {
+			$fields = $section['fields'];
+			foreach ( $fields as $field ) {
+				delete_option( $field['name'] );
+				unregister_setting( self::$options_group_name, $field['name'] );
+			}
+		}
+	}
+
 	/**
 	 * Update permalinks settings upon install.
 	 */
@@ -374,15 +385,14 @@ class Exit_Notice {
 	 */
 	public static function deactivate() {
 		remove_menu_page( self::$options_page_name );
-		delete_option( self::$options_group_name );
 		flush_rewrite_rules();
 	}
 
 	/**
-	 * Clean up option's data upon uninstall of plugin.
+	 * Delete options upon uninstall of plugin.
 	 */
 	public static function uninstall() {
-		delete_option( self::$options_group_name );
+		self::delete_plugin_options();
 	}
 
 }
