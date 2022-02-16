@@ -227,11 +227,17 @@ class Exit_Notice {
 			$whitelist = get_option( 'exitNoticeWhitelist' ) ? explode( ',', get_option( 'exitNoticeWhitelist' ) ) : array();
 			wp_localize_script( 'exit-notice-scripts', 'EXITNOTICE_WHITELIST', $whitelist );
 		}
+		function exit_notice_admin_styles() {
+			wp_register_style( 'exit-notice-admin-style', EXITNOTICE_PLUGIN_URL . 'assets/admin-css/styles.css', array(), EXITNOTICE_VERSION );
+			wp_enqueue_style( 'exit-notice-admin-style', EXITNOTICE_PLUGIN_URL . 'assets/admin-css/styles.css', null, EXITNOTICE_VERSION );
+		}
 		function exit_notice_admin_scripts() {
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'wp-color-picker-alpha', EXITNOTICE_PLUGIN_URL . '/assets/js/wp-color-picker-alpha.min.js', array( 'wp-color-picker' ), '3.0.2', true );
-			wp_enqueue_script( 'wp-color-picker-init', EXITNOTICE_PLUGIN_URL . '/assets/js/wp-color-picker-init.js', array( 'wp-color-picker-alpha' ), '1.0.0', true );
+			wp_enqueue_script( 'wp-color-picker-init', EXITNOTICE_PLUGIN_URL . '/assets/js/wp-color-picker-init.js', array( 'wp-color-picker-alpha' ), EXITNOTICE_VERSION, true );
+			wp_enqueue_script( 'exit-admin-scripts', EXITNOTICE_PLUGIN_URL . '/assets/js/admin-scripts.js', array( 'jquery' ), EXITNOTICE_VERSION, true );
 		}
+		add_action( 'admin_enqueue_scripts', 'exit_notice_admin_styles' );
 		add_action( 'admin_enqueue_scripts', 'exit_notice_admin_scripts' );
 
 		if ( $enable ) {
@@ -242,14 +248,27 @@ class Exit_Notice {
 	public static function admin_page() {
 		?>
 		<div class="wrap">
-			<h2><?php get_admin_page_title(); ?></h2>
+			<h2><?php echo get_admin_page_title(); ?></h2>
 
 			<form action="options.php" method="post">
-			<?php
-			settings_fields( self::$options_group_name );
-			do_settings_sections( self::$options_page_name );
-			submit_button();
-			?>
+				<?php
+				settings_fields( self::$options_group_name );
+				?>
+				<nav class="exit-notice__nav">
+					<?php
+					$options_sections = self::$options_schema;
+					foreach ( $options_sections as $section ) {
+						$section_title = $section['title'];
+						?>
+						<div class="exit-notice__nav-item"><?php echo esc_html( $section_title ); ?></div>
+					<?php } ?>
+				</nav>
+				<div class="exit-notice__sections">
+					<?php do_settings_sections( self::$options_page_name ); ?>
+				</div>
+				<?php
+				submit_button();
+				?>
 			</form>
 		</div>
 		<?php
